@@ -28,7 +28,7 @@ class Currency
     */
     private $currency_code;
     /**
-     *@ORM\Column(type="decimal", precision=10, scale=0) 
+     *@ORM\Column(type="decimal", precision=5, scale=2) 
      */
     private $exchange_rate;
 

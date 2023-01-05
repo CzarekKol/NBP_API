@@ -2,12 +2,21 @@
 
 namespace App\Controller;
 
+use App\Entity\Currency;
+use App\Repository\CurrencyRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CurrencyController extends AbstractController
 {
+    private CurrencyRepository $currencyRepository;
+
+    public function __construct(CurrencyRepository $currencyRepository)
+    {
+        $this->currencyRepository = $currencyRepository;
+    }
+
     #[Route('/currency', name: 'app_currency')]
     public function index(): Response
     {
@@ -32,9 +41,24 @@ class CurrencyController extends AbstractController
             $decode = json_decode($response);
         }
 
+        $em = $this->getDoctrine()->getManager();
+
+        foreach ($decode[0]->rates as $currency) {
+            if ($existingCurrency = $this->currencyRepository->findOneBy(['name' => $currency->currency])) {
+                $existingCurrency->setExchangeRate($currency->mid);
+            } else {
+            $curr = new Currency();
+            $curr->setName($currency->currency);
+            $curr->setCurrencyCode($currency->code);
+            $curr->setExchangeRate($currency->mid);
+
+            $em->persist($curr);
+            $em->flush();
+            }
+        }
+    
         return $this->render('currency/currency_table.html.twig',[
-            'items' => $decode ?? null,
-            'error' => $error ?? null
+            'items' => $this->currencyRepository->findAll() ?? null
         ]);
 
 

@@ -3,6 +3,20 @@
 {% block title %}Zadanie Rekrutacyjne - Kursy Walut{% endblock %}
 
 {% block body %}
-    {{ dump(items) }}
-    {{ dump(error) }}
+    <table border="1">
+	<tr>
+        <td>#</td>
+		<td>Waluta</td>
+		<td>Kod</td>
+		<td>Wartość</td>
+	</tr>
+    {% for item in items %}
+	<tr>
+        <td>{{loop.index}}</td>
+		<td>{{item.name}}</td>
+		<td>{{item.currencyCode}}</td>
+		<td>{{item.exchangeRate}}</td>
+	</tr>
+    {% endfor %}
+</table>
 {% endblock %}
