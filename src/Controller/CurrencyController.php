@@ -17,14 +17,14 @@ class CurrencyController extends AbstractController
         $this->currencyRepository = $currencyRepository;
     }
 
-    #[Route('/currency', name: 'app_currency')]
+    #[Route('/currency', name: 'currency')]
     public function index(): Response
     {
         return $this->render('currency/index.html.twig');
     }
 
     /**
-     * @Route("/currency/generateButton", name="name")
+     * @Route("/currency/generateButton", name="SaveCurrency")
      */
     public function getAndSaveCurrencyAction(): Response
     {
@@ -44,7 +44,7 @@ class CurrencyController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         foreach ($decode[0]->rates as $currency) {
-            if ($existingCurrency = $this->currencyRepository->findOneBy(['name' => $currency->currency])) {
+            if ($existingCurrency = $this->currencyRepository->findOneBy(['currency_code' => $currency->code])) {
                 $existingCurrency->setExchangeRate($currency->mid);
             } else {
             $curr = new Currency();

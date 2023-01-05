@@ -6,4 +6,6 @@
 <center>
     <h1> Kursy Walut </h1>
 <center>
+<button onClick="window.location.reload();"> Odśwież listę </button>
+{{ render(controller('App\\Controller\\CurrencyController::getAndSaveCurrencyAction')) }}
 {% endblock %}
